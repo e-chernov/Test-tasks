@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://js.cx/test/libs.js"></script>
+  <script src="test.js"></script>
+</head>
+<body>
+
+  <script>
+
+    /* исправьте этот код */
+    function pow(x, n) {
+      var result = 1;
+      for (var i = 0; i < n; i++) {
+        result *= x;
+      }
+      if (n < 0) result = NaN;
+      if (Math.round(n) != n) result = NaN;
+      return result;
+    }
+
+  </script>
+
+</body>
+</html>
