@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="http://image.flaticon.com/icons/png/128/163/163073.png">
+      <input class="search" id="search" type="text">
+    </div>
+    <div class="calendar-container">
+      <div class="month-change">
+        <button id="left-button">&#9668;</button>
+        <span id="month-elem"></span>
+        <span id="year-elem"></span>
+        <button id="right-button">&#9658;</button>
+        <button id="today-button">Сегодня</button>
+      </div>
+      <div class="calendar-wrapper">
+      <table class="calendar">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      </div>
+    </div>
+    
+    <div class="search-results" id="search-results">
+      <ul>
+        
+      </ul>
+    </div>
+    
+    <div class="form-container" id="form-container">
+      <img src="http://s1.iconbird.com/ico/2013/3/636/w80h80139396727833.png">
+      <form>
+        <input type="text" placeholder="Событие">
+        <!--<input type="text" placeholder="День, месяц, год">-->
+        <input type="text" placeholder="Имена участников">
+        <textarea placeholder="Описание"></textarea>
+        <button id="done-button">Готово</button>
+        <button id="clear-button">Удалить</button>
+      </form>
+    </div>
+    
+    <script src="script.js"></script>
+   </body>
+
+</html>

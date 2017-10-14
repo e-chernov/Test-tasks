@@ -1,0 +1,108 @@
+.header {
+  background-color: lightgray;
+  height: 50px;
+  position: relative;
+  box-shadow: 0px 4px 3px 0px gray;
+}
+
+.header img {
+  width: 12px;
+  position: absolute;
+  top: 20px;
+  right: 210px;
+}
+
+.search {
+  float: right;
+  margin-top: 15px;
+  margin-right: 30px;
+  width: 170px;
+  border-width: 3px;
+  border-style: inset;
+}
+
+.search-results {
+  position: absolute;
+  border: 1px solid gray;
+  width: 170px;
+  top: 45px;
+  right: 39px;
+  background-color: white;
+  padding: 0 0 0 0;
+  box-shadow: 0px 4px 3px 0px gray;
+}
+
+.search-results ul {
+  list-style: none;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.search-results li {
+  float: left;
+  text-align: left;
+  margin: 10px 80px 10px 0px;
+  cursor: pointer;
+}
+
+
+.month-change {
+  margin: 10px 30px 10px 30px;
+}
+
+.calendar-wrapper {
+  margin: 10px 30px 10px 30px;
+}
+
+.calendar {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+}
+
+.calendar td {
+  border: 1px solid lightgray;
+  height: 90px;
+  vertical-align: top;
+  color: gray;
+  width: 14.29%;
+  font-size: 10px;
+}
+
+.form-container {
+  position: absolute;
+  width: 250px;
+  height: 360px;
+  border: 1px solid gray;
+  display: none;
+  background-color: white;
+  box-shadow: 0px 4px 3px 0px gray;
+}
+
+.form-container form {
+  margin-top: 20px;
+}
+
+.form-container input {
+  display: block;
+  margin: auto;
+  width: 85%;
+  margin-top: 15px;
+}
+
+.form-container textarea {
+  width: 85%;
+  margin: 30px 10px 10px 15px;
+  min-height: 200px;
+}
+
+.form-container button {
+  margin-left: 15px;
+}
+
+.form-container img {
+  width: 10px;
+  float: right;
+  margin-right: 5px;
+  margin-top: 5px;
+}
