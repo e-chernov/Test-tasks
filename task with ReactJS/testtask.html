@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://npmcdn.com/react@15.3.0/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="https://npmcdn.com/jquery@3.1.0/dist/jquery.min.js"></script>
+    <script src="https://npmcdn.com/remarkable@1.6.2/dist/remarkable.min.js"></script>
+  </head>
+
+  <body>
+    <div id="content"></div>
+    <script type="text/babel">
+  class App extends React.Component {
+	constructor() {
+		super();
+		this.state = {value: 'вводите заметку сюда', formStyle: {display: 'none'}, openButtonStyle: {display: 'initial'}, addButtonStyle: {display: 'none'}, closeButtonStyle: {display: 'none'}, restoreButtonStyle: {display: 'none'}};
+		this.state.notes = [];
+	}
+
+	handleChange(event) {
+		this.setState({value: event.target.value});
+	}
+	
+	showButtons() {
+	  this.setState({openButtonStyle: {display: 'none'}, addButtonStyle: {display: 'initial'}, closeButtonStyle: {display: 'initial'}});
+	}
+	
+	closeButtons() {
+	  this.setState({openButtonStyle: {display: 'initial'}, addButtonStyle: {display: 'none'}, closeButtonStyle: {display: 'none'}});
+	}
+	
+	showNote() {
+	  this.setState({formStyle: {display: 'initial'}, restoreButtonStyle: {display: 'none'}});
+	}
+	
+	deleteNote() {
+	  this.setState({formStyle: {display: 'none'}, restoreButtonStyle: {display: 'initial'}});
+	}
+
+	render() {
+	  return <div>
+			      <a className="button" style={this.state.openButtonStyle} href="#" onClick={this.showButtons.bind(this)}>Открыть меню</a>
+			      <a className="button" style={this.state.addButtonStyle} href="#" onClick={this.showNote.bind(this)} href="#">Добавить заметку</a>
+			      <a className="button" style={this.state.closeButtonStyle} href="#" onClick={this.closeButtons.bind(this)}>Закрыть меню</a>
+			      <form style={this.state.formStyle}>
+			        <p>Заметка №1</p>
+			        <textarea value={this.state.value} onChange={this.handleChange.bind(this)}/>
+			        <a className="button" href="#" onClick={this.deleteNote.bind(this)}>Удалить заметку</a>
+			      </form>
+			      <a className="button" style={this.state.restoreButtonStyle} href="#" onClick={this.showNote.bind(this)}>Восстановить заметку</a>
+		</div>;
+	}
+}
+      ReactDOM.render(
+      	<App />,
+      	document.getElementById('content')
+      );
+    </script>
+  </body>
+
+</html>
