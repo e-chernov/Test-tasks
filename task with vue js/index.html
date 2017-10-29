@@ -17,45 +17,94 @@
                     <button>Опубликовать</button>
                 </form>
         </div>
-        <div class="post" v-for="post in posts">
+        <template id="post" class="post" v-for="post in posts">
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.body }}</p>
-        </div>   
+                <button>Редактировать</button>
+                <button>Удалить</button>
+                <div class="comment-editor">
+                    <form @submit.prevent="saveComment()">
+                        <input type="text" placeholder="Имя" v-model="comment.name">
+                        <textarea placeholder="Комментарий" v-model="comment.body"></textarea>
+                        <button>Добавить комментарий</button>
+                    </form>
+                </div>
+                <h3>Комментарии</h3>
+                <div class="comment" v-for="comment in post.comments">
+                  <h4>{{ comment.name }}</h4>
+                  <p>{{ comment.body }}</p>
+                </div>
+                <!--<template class="comments" id="comments" :comments="post.comments">
+                  <div class="comment-editor">
+                    <form @submit.prevent="saveComment()">
+                        <input type="text" placeholder="Имя" v-model="comment.name">
+                        <textarea placeholder="Комментарий" v-model="comment.body"></textarea>
+                        <button>Добавить комментарий</button>
+                    </form>
+                  </div>
+                  <h3>Комментарии</h3>
+                  <div class="comment" v-for="comment in comments">
+                    <h4>{{ comment.name }}</h4>
+                    <p>{{ comment.body }}</p>
+                  </div>
+                </template>-->
+        </template>   
       </div>  
         
         
         <script>
-          
+      
           Vue.use(VueResource)
+          
+          Vue.component('post', {
+            template: '#post',
+            props: ['post'],
+          })
+          
+          Vue.component('comments', {
+            template: '#comments',
+            props: ['comments'],
+            data: function() {
+              return {
+                comments: this.comments
+              }
+            },
+            methods: {
+              saveComment: function() {
+                      
+                //this.comment.postId = post.id
+                  this.commentResource.save(this.comment)
+                  this.comments.unshift(this.comment)
+              }
+            }
+          })
           
           new Vue({
               el: '#app',
               data: {
-                  endpoint: 'https://jsonplaceholder.typicode.com/posts',
+                  endpoint: 'https://jsonplaceholder.typicode.com/',
                   posts: [],
-                  post: {}
+                  comments: [],
+                  post: {},
+                  comment: {}
               },
               computed: {
-                  resource: function() {
+                  postResource: function() {
                       return this.$resource('https://jsonplaceholder.typicode.com/posts{/id}')
+                  },
+                  commentResource: function() {
+                      return this.$resource('https://jsonplaceholder.typicode.com/comments{/id}')
                   }
               },
               methods: {
                   savePost: function() {
-          
-                      this.resource.save(this.post)
+                      
+                      this.postResource.save(this.post)
                       this.posts.unshift(this.post)
           
                   },
-                  getSinglePost: function() {
-          
-                      this.resource.get({ id: 101 }).then(function(response) {
-          
-                          this.post = response.data
-          
-                      })
-          
-                  },
+                  
+                  
                   getAllPosts: function() {
           
                       var options = {
@@ -68,19 +117,50 @@
                           }
                       }
           
-                      this.$http.get(this.endpoint, options).then(function(response) {
+                      this.$http.get(this.endpoint + 'posts/', options).then(function(response) {
           
                           this.posts = response.data
-                          console.log(response.data)
+                          for (let i = 0; i < this.posts.length; i++) {
+                            this.getPostComments(this.posts[i]);
+                          }
+                          console.log(this.posts)
           
                       }, function(error) {
                           // ошибка
                       })
           
-                  }
+                  },
+                  getPostComments: function(post) {
+                    this.$http.get(this.endpoint + 'posts/' + post.id + '/comments').then(function(response) {
+                    this.$set(post, 'comments', response.data)
+                    //post.comments = response.data
+                    }, function(error) {
+                      //ошибка
+                    })
+                  },
+                  /*getAllComments: function() {
+                    var options = {
+                          params: {
+                              _start: 0,
+                              _limit: 50
+                          },
+                          headers: {
+                              'Content-Type': 'application/json'
+                          }
+                      }
+          
+                      this.$http.get(this.endpoint + 'comments/', options).then(function(response) {
+          
+                      this.comments = response.data
+                      console.log(this.comments)
+                      }, function(error) {
+                        //ошибка
+                      })
+                  }*/
               },
               created: function() {
                   this.getAllPosts()
+                  //this.getAllComments()
               }
           })
         </script>
