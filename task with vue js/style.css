@@ -97,6 +97,23 @@ button {
     position: relative;
     z-index: 2;
 }
+.post input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  outline: none;
+  border: none;
+}
+.post textarea {
+  width: 100%;
+  height: 125px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  border: none;
+  outline: none;
+  resize: none;
+}
 .comments {
   background-color: ghostwhite;
 }
