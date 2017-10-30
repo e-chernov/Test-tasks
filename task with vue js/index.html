@@ -17,23 +17,16 @@
                     <button>Опубликовать</button>
                 </form>
         </div>
-        <template id="post" class="post" v-for="post in posts">
+        <div id="post" class="post" v-for="(post, index) in posts">
                 <h3>{{ post.title }}</h3>
+                <input v-if="post.showEditor" v-model="post.title">
                 <p>{{ post.body }}</p>
-                <button>Редактировать</button>
-                <button>Удалить</button>
-                <div class="comment-editor">
-                    <form @submit.prevent="saveComment()">
-                        <input type="text" placeholder="Имя" v-model="comment.name">
-                        <textarea placeholder="Комментарий" v-model="comment.body"></textarea>
-                        <button>Добавить комментарий</button>
-                    </form>
-                </div>
-                <h3>Комментарии</h3>
-                <div class="comment" v-for="comment in post.comments">
-                  <h4>{{ comment.name }}</h4>
-                  <p>{{ comment.body }}</p>
-                </div>
+                <textarea v-if="post.showEditor" v-model="post.body"></textarea>
+                <button @click="showEditor(index)">Редактировать</button>
+                <button @click="deletePost(index)">Удалить</button>
+                <button @click="closeEditor(index)" v-if="post.showEditor">Сохранить</button>
+                <comments :comments="post.comments">  
+                </comments>
                 <!--<template class="comments" id="comments" :comments="post.comments">
                   <div class="comment-editor">
                     <form @submit.prevent="saveComment()">
@@ -48,7 +41,7 @@
                     <p>{{ comment.body }}</p>
                   </div>
                 </template>-->
-        </template>   
+        </div>   
       </div>  
         
         
@@ -62,17 +55,34 @@
           })
           
           Vue.component('comments', {
-            template: '#comments',
+            template: '<div class="comments">\
+                  <div class="comment-editor">\
+                      <form @submit.prevent="saveComment()">\
+                          <input type="text" placeholder="Имя" v-model="comment.name">\
+                          <textarea placeholder="Комментарий" v-model="comment.body"></textarea>\
+                          <button>Добавить комментарий</button>\
+                      </form>\
+                  </div>\
+                  <h3>Комментарии</h3>\
+                  <div class="comment" v-for="comment in comments">\
+                    <h4>{{ comment.name }}</h4>\
+                    <p>{{ comment.body }}</p>\
+                  </div>\
+            </div>',
             props: ['comments'],
             data: function() {
               return {
-                comments: this.comments
+                comments: this.comments,
+                comment: {}
               }
+            },
+            computed: {
+              commentResource: function() {
+                      return this.$resource('https://jsonplaceholder.typicode.com/comments{/id}')
+                  }
             },
             methods: {
               saveComment: function() {
-                      
-                //this.comment.postId = post.id
                   this.commentResource.save(this.comment)
                   this.comments.unshift(this.comment)
               }
@@ -91,12 +101,21 @@
               computed: {
                   postResource: function() {
                       return this.$resource('https://jsonplaceholder.typicode.com/posts{/id}')
-                  },
-                  commentResource: function() {
-                      return this.$resource('https://jsonplaceholder.typicode.com/comments{/id}')
                   }
               },
               methods: {
+                  showEditor: function(index) {
+                    this.$set(this.posts[index], 'showEditor', true)
+                  },
+                  
+                  closeEditor: function(index) {
+                    this.$set(this.posts[index], 'showEditor', false)
+                  },
+                  
+                  deletePost: function(index) {
+                    this.posts.splice(index, 1)
+                  },
+                  
                   savePost: function() {
                       
                       this.postResource.save(this.post)
