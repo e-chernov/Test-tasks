@@ -12,9 +12,9 @@
       <div id="app">    
          <div class="editor">
                 <form @submit.prevent="savePost()">
-                    <input type="text" placeholder="Заголовок" v-model="post.title">
-                    <textarea placeholder="Текст" v-model="post.body"></textarea>
-                    <button>Опубликовать</button>
+                    <input type="text" placeholder="Заголовок" v-model="currentPost.title">
+                    <textarea placeholder="Текст" v-model="currentPost.body"></textarea>
+                    <button>Опубликовать пост</button>
                 </form>
         </div>
         <div id="post" class="post" v-for="(post, index) in posts">
@@ -27,20 +27,6 @@
                 <button @click="closeEditor(index)" v-if="post.showEditor">Сохранить</button>
                 <comments :comments="post.comments">  
                 </comments>
-                <!--<template class="comments" id="comments" :comments="post.comments">
-                  <div class="comment-editor">
-                    <form @submit.prevent="saveComment()">
-                        <input type="text" placeholder="Имя" v-model="comment.name">
-                        <textarea placeholder="Комментарий" v-model="comment.body"></textarea>
-                        <button>Добавить комментарий</button>
-                    </form>
-                  </div>
-                  <h3>Комментарии</h3>
-                  <div class="comment" v-for="comment in comments">
-                    <h4>{{ comment.name }}</h4>
-                    <p>{{ comment.body }}</p>
-                  </div>
-                </template>-->
         </div>   
       </div>  
         
@@ -49,31 +35,31 @@
       
           Vue.use(VueResource)
           
-          Vue.component('post', {
-            template: '#post',
-            props: ['post'],
-          })
-          
           Vue.component('comments', {
             template: '<div class="comments">\
                   <div class="comment-editor">\
                       <form @submit.prevent="saveComment()">\
-                          <input type="text" placeholder="Имя" v-model="comment.name">\
-                          <textarea placeholder="Комментарий" v-model="comment.body"></textarea>\
+                          <input type="text" placeholder="Имя" v-model.lazy="currentComment.name">\
+                          <textarea placeholder="Комментарий" v-model.lazy="currentComment.body"></textarea>\
                           <button>Добавить комментарий</button>\
                       </form>\
                   </div>\
                   <h3>Комментарии</h3>\
-                  <div class="comment" v-for="comment in comments">\
+                  <div class="comment" v-for="(comment, index) in comments">\
                     <h4>{{ comment.name }}</h4>\
+                    <input v-if="comment.showEditor" v-model.lazy="comment.name">\
                     <p>{{ comment.body }}</p>\
+                    <textarea v-if="comment.showEditor" v-model.lazy="comment.body"></textarea>\
+                    <button v-if="comment.isMine" @click="showEditor(index)">Редактировать</button>\
+                    <button v-if="comment.isMine" @click="deleteComment(index)">Удалить</button>\
+                    <button v-if="comment.showEditor" @click="closeEditor(index)">Сохранить</button>\
                   </div>\
             </div>',
             props: ['comments'],
             data: function() {
               return {
                 comments: this.comments,
-                comment: {}
+                currentComment: {}
               }
             },
             computed: {
@@ -83,9 +69,29 @@
             },
             methods: {
               saveComment: function() {
-                  this.commentResource.save(this.comment)
-                  this.comments.unshift(this.comment)
-              }
+                  let clone = {};
+
+
+                  for (let key in this.currentComment) {
+                    clone[key] = this.currentComment[key];
+                  }
+                  
+                  this.commentResource.save(clone)
+                  this.$set(clone, 'isMine', true)
+                  this.comments.unshift(clone)
+              },
+              
+              deleteComment: function(index) {
+                this.comments.splice(index, 1)
+              },
+              
+              showEditor: function(index) {
+                    this.$set(this.comments[index], 'showEditor', true)
+                  },
+                  
+              closeEditor: function(index) {
+                    this.$set(this.comments[index], 'showEditor', false)
+                  },
             }
           })
           
@@ -94,9 +100,7 @@
               data: {
                   endpoint: 'https://jsonplaceholder.typicode.com/',
                   posts: [],
-                  comments: [],
-                  post: {},
-                  comment: {}
+                  currentPost: {}
               },
               computed: {
                   postResource: function() {
@@ -117,10 +121,16 @@
                   },
                   
                   savePost: function() {
+                      let clone = {};
+
+
+                      for (let key in this.currentPost) {
+                        clone[key] = this.currentPost[key];
+                      }
+                      this.postResource.save(clone)
+                      this.$set(clone, 'comments', [])
+                      this.posts.unshift(clone)
                       
-                      this.postResource.save(this.post)
-                      this.posts.unshift(this.post)
-          
                   },
                   
                   
@@ -157,29 +167,10 @@
                       //ошибка
                     })
                   },
-                  /*getAllComments: function() {
-                    var options = {
-                          params: {
-                              _start: 0,
-                              _limit: 50
-                          },
-                          headers: {
-                              'Content-Type': 'application/json'
-                          }
-                      }
-          
-                      this.$http.get(this.endpoint + 'comments/', options).then(function(response) {
-          
-                      this.comments = response.data
-                      console.log(this.comments)
-                      }, function(error) {
-                        //ошибка
-                      })
-                  }*/
+
               },
               created: function() {
                   this.getAllPosts()
-                  //this.getAllComments()
               }
           })
         </script>
