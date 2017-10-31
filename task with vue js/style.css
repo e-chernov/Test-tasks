@@ -87,7 +87,7 @@ button {
     line-height: 160px;
 }
 .post h3 {
-    font-size: 16px;
+    font-size: 26px;
     margin: 0 0 6px;
     position: relative;
     z-index: 2;
@@ -116,6 +116,7 @@ button {
 }
 .comments {
   background-color: ghostwhite;
+  padding: 30px;
 }
 .comment-editor form {
   padding-top: 20px;
@@ -154,29 +155,9 @@ button {
     z-index: 2;
 }
 
-.Alert {
-    background-color: #3f5dbb;
-    color: #fff;
-    text-align: center;
-    height: 32px;
-    line-height: 32px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+.comment button {
+  height: 20px;
+  padding: 3px;
+  background-color: green;
 }
 
-.fadeInDown-transition {
-    animation: fadeInDown .1s ease-in-out;
-}
-
-@keyframes fadeInDown {
-    0% {
-        opacity: 0;
-        transform: translateY(-32px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-}
