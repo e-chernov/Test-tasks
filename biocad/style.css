@@ -1,0 +1,26 @@
+td {
+  border: 1px solid black;
+}
+
+.el-container {
+  display: inline-block;
+  text-align: center;
+}
+
+.fr {
+  background: LightCoral;
+  border-collapse: collapse;
+}
+
+.cdr {
+  background: Crimson;
+  border-collapse: collapse;
+}
+
+.selected {
+  background: Olive;
+}
+
+.button-container {
+  margin-top: 30px;
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://npmcdn.com/react@15.3.0/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.0/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+  </head>
+
+  <body>
+    <div id="chain"></div>
+    <script type="text/babel">
+      class Chain extends React.Component {
+        constructor() {
+      		super();
+      	}
+        
+        handleMouseDown(e) {
+          e.preventDefault();
+          if (e.target.tagName !== 'TD' || e.target.parentElement === e.target.parentElement.parentElement.children[1]) return;
+          if (!e.target.classList.contains('selected')) {
+            e.target.classList.add('selected');
+          }
+          const moveHandler = (e) => {
+            if (e.target.tagName !== 'TD' || e.target.parentElement === e.target.parentElement.parentElement.children[1]) return;
+            if (!e.target.classList.contains('selected')) {
+              e.target.classList.add('selected');
+            }
+          }
+          const chain = document.getElementById('chain-container');
+          chain.addEventListener('mouseover', moveHandler);
+          chain.addEventListener('mouseup', () => chain.removeEventListener('mouseover', moveHandler));
+          const keyDownHandler = (e) => {
+            if (e.keyCode === 67 && e.ctrlKey || e.metaKey) {
+              const tds = chain.querySelectorAll('td'); 
+              let result = [];
+              let currentString = '';
+              tds.forEach((elem, i) => {
+                if (elem.classList.contains('selected')) currentString += elem.innerHTML;
+                else if (currentString !== '') {
+                  result.push(currentString);
+                  currentString = '';
+                };
+              });
+              this.props.onSelection(result);
+            }
+          };
+          document.addEventListener('keydown', keyDownHandler)
+        }
+        
+        handleReset() {
+          document.getElementById('chain-container').querySelectorAll('td').forEach((elem) => {
+            elem.classList.remove('selected');
+          })
+        }
+        
+        render() {
+          const elemNumbers = ['1', '1', '2', '2', '3', '3', '4'];
+          
+          let count = 0;
+          const sequence = this.props.sequence.split('').map((symbol) => {
+            if (symbol === ' ') return ' ';
+            else {
+              count++;
+              return {
+                symbol: symbol,
+                number: count,
+              };
+            };
+          });
+          
+          let elems = [];
+          let currentElem = [];
+          sequence.forEach((symbol, i) => {
+            if (symbol === ' ') {
+              elems.push(currentElem);
+              currentElem = [];
+            }
+            else currentElem.push(symbol);
+            if (i === sequence.length - 1) elems.push(currentElem);
+          });
+          
+          console.log(elems);
+          return <div id="chain-container">
+              {elems.map((elem, i) => {
+                return <div className="el-container">
+                        <table
+                          onMouseDown={this.handleMouseDown.bind(this)}
+                          className={i % 2 ? 'cdr' : 'fr'}
+                        >
+                          <caption className={i % 2 ? 'cdr' : 'fr'}>{i % 2 ? 'CDR' + elemNumbers[i] : 'FR' + elemNumbers[i]}</caption>
+                          <tbody>
+                            <tr>
+                             {elem.map((symbol) => {
+                               return <td>{symbol.symbol}</td>
+                             })}
+                            </tr>
+                            <tr>
+                             {elem.map((symbol) => {
+                               return <td>{symbol.number}</td>
+                             })}
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                })}
+                <div className="button-container">
+                  <button onClick={this.handleReset.bind(this)}>Сбросить выделение</button>
+                </div>
+            </div>
+        }
+      }
+      
+      ReactDOM.render(
+      	<Chain
+      	  sequence="QVQLVESGGGL VQPGG SLRLSCAASRSIFSINAM NWYRQAPGKGTEWVAQITDEGIT NYVDSVKGRFTI SRDNAKNTLYLQMNSLRAEDTAVY YCNAFVITTTSEIYWGQGTTVTVSS"
+          onSelection={ selection => console.log(selection) }
+      	/>,
+      	document.getElementById('chain')
+      );
+    </script>
+  </body>
+
+</html>
